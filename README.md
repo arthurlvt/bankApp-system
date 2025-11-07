@@ -72,7 +72,7 @@ A secure and feature-rich banking system with account management, currency conve
    ```
 
 4. **🔧 Configuration**
-> To use the exchange rate API, replace "TON_API_KEY" in main.c with your actual API key from a service like [ExchangeRate-API](https://app.exchangerate-api.com/)
+> To use the exchange rate API, replace "YOUR KEY API" in main.c with your actual API key from a service like [ExchangeRate-API](https://app.exchangerate-api.com/)
 
 >[!IMPORTANT] 
 > For enhanced security, configure your API key in a separate configuration file.
