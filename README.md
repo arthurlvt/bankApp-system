@@ -1,4 +1,4 @@
-
+# Welcome on bankApp Project
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/ton-utilisateur/bank-system)
@@ -74,7 +74,7 @@ A secure and feature-rich banking system with account management, currency conve
 4. **🔧 Configuration**
 > To use the exchange rate API, replace "TON_API_KEY" in main.c with your actual API key from a service like [ExchangeRate-API](https://app.exchangerate-api.com/)
 
-[!IMPORTANT] 
+>[!IMPORTANT] 
 > For enhanced security, configure your API key in a separate configuration file.
 
 ---
@@ -117,5 +117,3 @@ bank-system/
 - [ ] Create a mobile application.
 
 ...more next
-
-=======
