@@ -9,7 +9,7 @@ int main() {
     int count = loadAllAccounts(accounts);
 
     // Replace with your actual API key
-    if (fetchExchangeRates(&rates, "d5f0a7884008ab629efea30c") != 0) {
+    if (fetchExchangeRates(&rates, "YOUR API KEY") != 0) {
         printf("Failed to fetch exchange rates. Using default values.\n");
         // Use default values in case of failure
         rates.eur_to_usd = 1.08;
