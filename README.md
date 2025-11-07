@@ -109,7 +109,7 @@ bank-system/
 - [x] Improve error handling and make a handler
 
 ### Version 1.2
-- [ ]Develop a simple graphical user interface
+- [ ] Develop a simple graphical user interface
 - [ ] Add support for more currencies
 - [ ] Implement exchange rate alerts
 - [ ] Replace text files with a database (SQLite, MySQL).
