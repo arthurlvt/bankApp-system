@@ -1,0 +1,30 @@
+# Compiled Object Files 
+*.o
+*.a
+*.so
+*.dylib
+
+# Executable Files
+bankSystem
+
+# Temporary and Backup Files
+*.swp
+*.swo
+*.bak
+*~
+.DS_Store
+
+# Build Directory
+build/
+
+# Log and Cache Files
+*.log
+*.cache
+
+# IDE Files
+.vscode/
+.idea/
+*.iml
+
+# Local Configuration Files
+.env
