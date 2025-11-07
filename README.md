@@ -2,6 +2,9 @@
 
 A simple and secure banking system with account management, currency conversion, and real-time exchange rate fetching.
 
+> [!WARNING]
+> This repo is currently under developement so if there are some issues, don't mind it !
+
 ---
 
 ## Features
