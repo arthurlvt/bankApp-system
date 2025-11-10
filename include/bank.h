@@ -6,11 +6,18 @@
 
 #define MAX_ACCOUNTS 100
 #define MAX_PASSWORD_LENGTH 50
+#define EXCHANGE_RATES_FILE "exchange_rates.txt"
+
+typedef enum {
+    USD,
+    EUR,
+    GBP
+} Currency;
 
 typedef struct {
     char name[50];
     int balance;
-    int currency;
+    Currency currency;
     unsigned long passwordHash;
     unsigned long salt;
 } Account;
@@ -24,13 +31,15 @@ typedef struct {
     double gbp_to_usd;
 } ExchangeRates;
 
-// Prototypes of functions
+// Prototypes des fonctions
 int loadAllAccounts(Account accounts[]);
 void saveAllAccounts(Account accounts[], int count);
 int selectAccount(Account accounts[], int *count);
 void transferMoney(Account accounts[], int count, int currentIndex);
 int fetchExchangeRates(ExchangeRates *rates, const char *api_key);
+void saveExchangeRates(ExchangeRates rates);
+int loadExchangeRates(ExchangeRates *rates);
 void displayExchangeRates(ExchangeRates rates);
-double convertCurrency(double amount, int fromCurrency, int toCurrency, ExchangeRates rates);
+double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency, ExchangeRates rates);
 
 #endif

@@ -9,7 +9,7 @@ struct MemoryStruct {
     size_t size;
 };
 
-// Callback for libcurl : write data into a memory buffer
+// Callback pour libcurl : écrit les données reçues dans une structure
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
     struct MemoryStruct *mem = (struct MemoryStruct *)userp;
@@ -25,7 +25,37 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
     return realsize;
 }
 
-// Function to fetch exchange rates from the API
+// Sauvegarder les taux de change dans un fichier
+void saveExchangeRates(ExchangeRates rates) {
+    FILE *file = fopen(EXCHANGE_RATES_FILE, "w");
+    if (!file) {
+        printf("Error saving exchange rates!\n");
+        return;
+    }
+    fprintf(file, "%.2f %.2f %.2f %.2f %.2f %.2f\n",
+            rates.eur_to_usd, rates.eur_to_gbp, rates.usd_to_eur,
+            rates.usd_to_gbp, rates.gbp_to_eur, rates.gbp_to_usd);
+    fclose(file);
+    printf("Exchange rates saved to file.\n");
+}
+
+// Charger les taux de change depuis un fichier
+int loadExchangeRates(ExchangeRates *rates) {
+    FILE *file = fopen(EXCHANGE_RATES_FILE, "r");
+    if (!file) {
+        return -1;
+    }
+    if (fscanf(file, "%lf %lf %lf %lf %lf %lf",
+               &rates->eur_to_usd, &rates->eur_to_gbp, &rates->usd_to_eur,
+               &rates->usd_to_gbp, &rates->gbp_to_eur, &rates->gbp_to_usd) != 6) {
+        fclose(file);
+        return -1;
+    }
+    fclose(file);
+    return 0;
+}
+
+// Fonction pour récupérer les taux de change depuis l'API
 int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
     CURL *curl;
     CURLcode res;
@@ -65,6 +95,9 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
             rates->gbp_to_eur = 1.0 / rates->eur_to_gbp;
             rates->usd_to_gbp = rates->eur_to_gbp / rates->eur_to_usd;
             rates->gbp_to_usd = rates->eur_to_usd / rates->eur_to_gbp;
+
+            // Sauvegarder les taux de change dans un fichier
+            saveExchangeRates(*rates);
         } else {
             printf("Failed to parse exchange rates.\n");
             free(chunk.memory);
@@ -81,35 +114,35 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
     return 0;
 }
 
-// Display exchange rates
+// Afficher les taux de change
 void displayExchangeRates(ExchangeRates rates) {
     printf("\n=== Current Exchange Rates ===\n");
-    printf("1 EUR = %.4f USD\n", rates.eur_to_usd);
-    printf("1 EUR = %.4f GBP\n", rates.eur_to_gbp);
-    printf("1 USD = %.4f EUR\n", rates.usd_to_eur);
-    printf("1 USD = %.4f GBP\n", rates.usd_to_gbp);
-    printf("1 GBP = %.4f EUR\n", rates.gbp_to_eur);
-    printf("1 GBP = %.4f USD\n", rates.gbp_to_usd);
+    printf("1 EUR = %.2f USD\n", rates.eur_to_usd);
+    printf("1 EUR = %.2f GBP\n", rates.eur_to_gbp);
+    printf("1 USD = %.2f EUR\n", rates.usd_to_eur);
+    printf("1 USD = %.2f GBP\n", rates.usd_to_gbp);
+    printf("1 GBP = %.2f EUR\n", rates.gbp_to_eur);
+    printf("1 GBP = %.2f USD\n", rates.gbp_to_usd);
 }
 
-// Convert currency amounts
-double convertCurrency(double amount, int fromCurrency, int toCurrency, ExchangeRates rates) {
+// Convertir un montant d'une devise à une autre
+double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency, ExchangeRates rates) {
     if (fromCurrency == toCurrency) {
         return amount;
     }
     switch (fromCurrency) {
-        case 1: // USD
-            if (toCurrency == 2) return amount * rates.usd_to_eur; // USD -> EUR
-            if (toCurrency == 3) return amount * rates.usd_to_gbp; // USD -> GBP
+        case USD:
+            if (toCurrency == EUR) return amount * rates.usd_to_eur; // USD -> EUR
+            if (toCurrency == GBP) return amount * rates.usd_to_gbp; // USD -> GBP
             break;
-        case 2: // EUR
-            if (toCurrency == 1) return amount * rates.eur_to_usd; // EUR -> USD
-            if (toCurrency == 3) return amount * rates.eur_to_gbp; // EUR -> GBP
+        case EUR:
+            if (toCurrency == USD) return amount * rates.eur_to_usd; // EUR -> USD
+            if (toCurrency == GBP) return amount * rates.eur_to_gbp; // EUR -> GBP
             break;
-        case 3: // GBP
-            if (toCurrency == 1) return amount * rates.gbp_to_usd; // GBP -> USD
-            if (toCurrency == 2) return amount * rates.gbp_to_eur; // GBP -> EUR
+        case GBP:
+            if (toCurrency == USD) return amount * rates.gbp_to_usd; // GBP -> USD
+            if (toCurrency == EUR) return amount * rates.gbp_to_eur; // GBP -> EUR
             break;
     }
-    return amount; // In case of error
+    return amount; // En cas d'erreur
 }
