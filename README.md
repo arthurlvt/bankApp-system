@@ -29,6 +29,7 @@ A secure and feature-rich banking system with account management, currency conve
   prévus dans les options)
 - Ajouter des fonctions pour simuler les frais de change // 1% par frais pour avantager la banque et non l'utilisateur
 - Revoir le système de transfert d'argent
+- Stocker le dernier rapport de change pour avoir un truc cohérent
 
 ---
 
