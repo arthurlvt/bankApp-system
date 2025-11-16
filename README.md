@@ -3,10 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/ton-utilisateur/bank-system)
 
+A secure and feature-rich banking system with account management, currency conversion, and real-time exchange rate fetching.
+
 > [!IMPORTANT]
 > ***Before reading this project, you nead to consult the [LICENSE](https://github.com/arthurlvt/bankApp-system/LICENSE) !!!***
-
-A secure and feature-rich banking system with account management, currency conversion, and real-time exchange rate fetching.
 
 ---
 
