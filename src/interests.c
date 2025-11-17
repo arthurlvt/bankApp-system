@@ -11,6 +11,7 @@ void save_interest_rates(double *rates, int count) {
         perror("Failed to open interest rates file");
         return;
     }
+    fprintf(file, "Frais - Virements Instantannés\n");
     fwrite(rates, sizeof(double), count, file);
     fclose(file);
 }

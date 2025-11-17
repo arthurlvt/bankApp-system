@@ -8,6 +8,8 @@
 #define MAX_PASSWORD_LENGTH  50
 #define EXCHANGE_RATES_FILE  "../exchange_rates.txt"
 
+
+// Account structure
 typedef enum {
     USD,
     EUR,
@@ -25,6 +27,8 @@ typedef struct {
     unsigned long salt;
 } Account;
 
+
+// Exchange rates structure
 typedef struct {
     double eur_to_usd;
     double eur_to_gbp;
@@ -33,6 +37,12 @@ typedef struct {
     double gbp_to_eur;
     double gbp_to_usd;
 } ExchangeRates;
+
+
+// Interest Rates structure
+typedef struct {
+    
+}
 
 // Account management
 int  loadAllAccounts(Account accounts[]);

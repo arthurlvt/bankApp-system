@@ -21,11 +21,10 @@ int loadAllAccounts(Account accounts[]) {
                &accounts[count].balance,
                &accounts[count].currency,
                &accounts[count].passwordHash,
-               &accounts[count].salt) == 5
+               &accounts[count].salt) == 8
     ) {
         count++;
     }
-
     fclose(file);
     return count;
 }
