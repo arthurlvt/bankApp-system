@@ -6,7 +6,7 @@
 A secure and feature-rich banking system with account management, currency conversion, and real-time exchange rate fetching.
 
 > [!IMPORTANT]
-> ***Before reading this project, you nead to consult the [LICENSE](https://github.com/arthurlvt/bankApp-system/LICENSE) !!!***
+> ***Before reading this project, you need to consult the [LICENSE](https://github.com/arthurlvt/bankApp-system/LICENSE) !!!***
 
 ---
 
