@@ -4,7 +4,7 @@
 #include <curl/curl.h>
 #include "../include/bank.h"
 
-#define EXCHANGE_RATES_FILE "exchange_rates.dat"
+#define EXCHANGE_RATES_FILE "../data/exchange_rates.dat"
 
 struct MemoryStruct {
     char *memory;

@@ -1,0 +1,5 @@
+{
+    "instant_transfer_fee": 1.0,
+    "standard_transfer_fee": 0.5,
+    "exchange_rate_margin": 1.0
+}

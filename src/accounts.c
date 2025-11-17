@@ -6,7 +6,7 @@
 #include "../include/accounts.h"
 
 int loadAllAccounts(Account accounts[]) {
-    FILE *file = fopen("accounts.txt", "r");
+    FILE *file = fopen("../data/accounts.txt", "r");
     if (!file)
         return 0;
 
@@ -30,7 +30,7 @@ int loadAllAccounts(Account accounts[]) {
 }
 
 void saveAllAccounts(Account accounts[], int count) {
-    FILE *file = fopen("accounts.txt", "w");
+    FILE *file = fopen("../data/accounts.txt", "w");
     if (!file) {
         printf("Error saving accounts!\n");
         return;
