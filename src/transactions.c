@@ -1,20 +1,6 @@
-#include <stdio.h>
-#include <string.h>
 #include "../include/bank.h"
-
-void addMoney(Account accounts[], int count, int currentIndex) {
-    (void)count;
-    Account *account = &accounts[currentIndex];
-    if (strcmp(account->name, "admin") != 0) {
-        printf("❌ Only the admin account can add money.\n");
-        return;
-    }
-    int amount;
-    printf("Enter amount to add: ");
-    scanf("%d", &amount);
-    account->balance += amount;
-    printf("✅ Added %d to admin balance. New balance: %d\n", amount, account->balance);
-}
+#include "../include/json_utils.h"
+#include <stdio.h>
 
 void transferMoney(Account accounts[], int count, int currentIndex) {
     BankFeesTransfer fees;
@@ -118,12 +104,12 @@ void transferMoney(Account accounts[], int count, int currentIndex) {
     scanf("%d", &proceed);
 
     if (proceed == 1) {
-        accounts[currentIndex].balance -= (amount + totalFees);
-        accounts[destIndex].balance += convertedAmount;
+        accounts[currentIndex].balance -= (int)(amount + totalFees);
+        accounts[destIndex].balance += (int)convertedAmount;
 
         printf("✅ Transfer successful!\n");
-        printf("New balance for %s: %.2f\n", accounts[currentIndex].name, accounts[currentIndex].balance);
-        printf("New balance for %s: %.2f\n", accounts[destIndex].name, accounts[destIndex].balance);
+        printf("New balance for %s: %d\n", accounts[currentIndex].name, accounts[currentIndex].balance);
+        printf("New balance for %s: %d\n", accounts[destIndex].name, accounts[destIndex].balance);
     } else {
         printf("Transfer cancelled.\n");
     }

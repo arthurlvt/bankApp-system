@@ -156,7 +156,7 @@ int selectAccount(Account accounts[], int *count) {
                 continue;
             }
 
-            // ✅ Suppression réelle du compte
+            // ✅ Delete account by shifting array
             for (int i = deleteChoice - 1; i < *count - 1; i++) {
                 accounts[i] = accounts[i + 1];
             }

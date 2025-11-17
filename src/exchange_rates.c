@@ -11,7 +11,7 @@ struct MemoryStruct {
     size_t size;
 };
 
-// Callback pour curl
+// Callback for curl
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     size_t realsize = size * nmemb;
     struct MemoryStruct *mem = (struct MemoryStruct *)userp;
@@ -30,7 +30,7 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
     return realsize;
 }
 
-// Sauvegarde des taux de change dans un fichier
+// Sauve exchange rates to file
 void saveExchangeRates(ExchangeRates rates) {
     FILE *file = fopen(EXCHANGE_RATES_FILE, "w");
     if (!file) {
@@ -66,7 +66,7 @@ int loadExchangeRates(ExchangeRates *rates) {
     return 0;
 }
 
-// Récupération des taux de change via l'API
+// Get exchange rates from API
 int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
     CURL *curl;
     CURLcode res;
@@ -102,10 +102,10 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
         return -1;
     }
 
-    // Affichage de la réponse brute pour debug
+    // Display the fetched data (for debugging)
     printf("API Response: %s\n", chunk.memory);
 
-    // Parsing basique du JSON
+    // Basic JSON parsing
     char *usd_rate = strstr(chunk.memory, "\"USD\":");
     char *gbp_rate = strstr(chunk.memory, "\"GBP\":");
 
@@ -113,7 +113,7 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
         sscanf(usd_rate, "\"USD\":%lf", &rates->eur_to_usd);
         sscanf(gbp_rate, "\"GBP\":%lf", &rates->eur_to_gbp);
 
-        // Calcul des taux croisés
+        // Calculate inverse rates
         rates->usd_to_eur = 1.0 / rates->eur_to_usd;
         rates->gbp_to_eur = 1.0 / rates->eur_to_gbp;
         rates->usd_to_gbp = rates->eur_to_gbp / rates->eur_to_usd;
@@ -135,7 +135,7 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
     return 0;
 }
 
-// Affichage des taux de change
+// Display exchange rates
 void displayExchangeRates(ExchangeRates rates) {
     printf("\n=== Current Exchange Rates ===\n");
     printf("1 EUR = %.4f USD\n", rates.eur_to_usd);
@@ -146,7 +146,7 @@ void displayExchangeRates(ExchangeRates rates) {
     printf("1 GBP = %.4f USD\n", rates.gbp_to_usd);
 }
 
-// Conversion entre devises
+// Convert currency
 double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency, ExchangeRates rates) {
     if (fromCurrency == toCurrency) return amount;
 

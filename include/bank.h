@@ -77,4 +77,7 @@ double convertCurrency(double amount,
                        Currency toCurrency,
                        ExchangeRates rates);
 
+// Bank fees management
+void loadBankFees(const char *filename, BankFeesTransfer *fees);
+
 #endif // BANK_H

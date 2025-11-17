@@ -67,8 +67,6 @@ int main() {
         printf("6. Refresh Exchange Rates from API\n");
         printf("7. Convert Currency\n");
         printf("8. Save and Quit\n");
-
-        // Lecture sécurisée
         scanf("%31s", input);
         char *endptr;
         choice = strtol(input, &endptr, 10);
