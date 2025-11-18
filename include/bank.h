@@ -7,6 +7,9 @@
 
 #define MAX_ACCOUNTS         100
 #define MAX_PASSWORD_LENGTH  50
+#define MAX_RIB_LENGTH 24
+#define MAX_IBAN_LENGTH 35
+#define MAX_BIC_LENGTH 12
 #define EXCHANGE_RATES_FILE  "../data/exchange_rates.txt"
 
 
@@ -17,13 +20,23 @@ typedef enum {
     GBP
 } Currency;
 
+typedef enum {
+    UNKNOWN,
+    FRENCH,
+    AMERICAN,
+    BRITISH
+} Nationality;
+
 typedef struct {
     char name[50];
-    int balance;
     int age;
     int gender;
-    unsigned long nationality;
+    Nationality nationality;
     Currency currency;
+    int balance;
+    char rib[MAX_RIB_LENGTH];
+    char iban[MAX_IBAN_LENGTH];
+    char bic[MAX_BIC_LENGTH];
     unsigned long passwordHash;
     unsigned long salt;
 } Account;

@@ -9,7 +9,7 @@ DATA_DIR = data
 
 # Compilateur et options
 CC = gcc
-CFLAGS = -Wall -Wextra -I$(INC_DIR) -I/usr/local/include
+CFLAGS = -Wall -Wextra -I$(INC_DIR)
 LIBS = -lcjson
 
 # Liste des fichiers sources

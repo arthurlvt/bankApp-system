@@ -1,185 +1,122 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
-#include <time.h>
 #include "../include/bank.h"
+#include "../include/accounts.h"
 #include "../include/utils.h"
+
+void displayMainMenu() {
+    printf("\n===== Main Menu =====\n");
+    printf("1. Create Account\n");
+    printf("2. Log In\n");
+    printf("3. Exit\n");
+    printf("> ");
+}
+
+void displayAccountMenu(const Account *account) {
+    printf("\n===== Account Menu for %s =====\n", account->name);
+    printf("1. View Account Info\n");
+    printf("2. Transfer Money\n");
+    printf("3. Add Money (Admin Only)\n");
+    printf("4. Log Out\n");
+    printf("> ");
+}
 
 int main() {
     Account accounts[MAX_ACCOUNTS];
-    ExchangeRates rates;
-    int count = loadAllAccounts(accounts);
-    bool adminFound = false;
+    int accountCount = loadAllAccounts(accounts);
 
-    // Vérifie si le compte admin existe
-    for (int i = 0; i < count; i++) {
-        if (strcmp(accounts[i].name, "admin") == 0) {
-            adminFound = true;
-            break;
-        }
-    }
-
-    // Making sure an admin account exists (creates one if not)
-    if (!adminFound) {
-        printf("Creating default admin account...\n");
-        strcpy(accounts[count].name, "admin");
-        accounts[count].age = 30;
-        accounts[count].gender = 0; // assuming 0 = male, 1 = female
-        accounts[count].nationality = 0; // assuming 0 = unknown, 1 = French, 2 = American, 3 = British
-        accounts[count].balance = 100000; // banque initiale
-        accounts[count].currency = EUR;
-        accounts[count].salt = (unsigned long)time(NULL);
-        accounts[count].passwordHash = hashPassword("admin123", accounts[count].salt);
-        count++;
-        saveAllAccounts(accounts, count);
-        printf("✅ Admin account created (username: admin / password: admin123)\n");
-    }
-
-    printf("\n=== Welcome to the International ATM Machine! ===\n\n");
-    int index = selectAccount(accounts, &count);
-    if (index < 0) {
-        printf("Exiting...\n");
-        return 0;
-    }
-
-    Account *user = &accounts[index];
-
-    // Conversion devise en chaîne
-    const char *currencyStr;
-    switch (user->currency) {
-        case USD: currencyStr = "USD"; break;
-        case EUR: currencyStr = "EUR"; break;
-        case GBP: currencyStr = "GBP"; break;
-        default: currencyStr = "UNKNOWN"; break;
-    }
-
-    char input[32];
-    int choice = 0;
+    int choice;
+    int loggedIn = 0;
+    int currentAccountIndex = -1;
 
     do {
-        printf("\n===== ATM MENU for %s =====\n", user->name);
-        printf("1. Add Money (admin only)\n");
-        printf("2. Take cash\n");
-        printf("3. Display Balance\n");
-        printf("4. Transfer Money\n");
-        printf("5. Check Exchange Rates\n");
-        printf("6. Refresh Exchange Rates from API\n");
-        printf("7. Convert Currency\n");
-        printf("8. Save and Quit\n");
-        scanf("%31s", input);
-        char *endptr;
-        choice = strtol(input, &endptr, 10);
+        if (!loggedIn) {
+            displayMainMenu();
+            scanf("%d", &choice);
 
-        if (*endptr != '\0') {
-            printf("❌ Invalid input. Please enter a number.\n");
-            continue;
-        }
-
-        switch (choice) {
-            case 1: {
-                addMoney(accounts, count, index);
-                saveAllAccounts(accounts, count);
-                break;
-            }
-
-            case 2: {
-                int amount;
-                printf("How much would you like to extract? ");
-                if (scanf("%d", &amount) != 1 || amount <= 0) {
-                    printf("❌ Invalid amount.\n");
-                    while (getchar() != '\n'); // vide le buffer
-                    break;
-                }
-                if (amount > user->balance)
-                    printf("❌ Insufficient funds.\n");
-                else {
-                    user->balance -= amount;
-                    printf("✅ New balance: %d %s\n", user->balance, currencyStr);
-                    saveAllAccounts(accounts, count);
-                }
-                break;
-            }
-
-            case 3: {
-                printf("💰 Current balance: %d %s\n", user->balance, currencyStr);
-                break;
-            }
-
-            case 4: {
-                transferMoney(accounts, count, index);
-                saveAllAccounts(accounts, count);
-                break;
-            }
-
-            case 5: {
-                printf("Fetching exchange rates from API...\n");
-                if (fetchExchangeRates(&rates, "d5f0a7884008ab629efea30c") == 0) {
-                    printf("✅ Exchange rates fetched successfully and saved to file.\n");
-                } else {
-                    printf("⚠️ Failed to fetch exchange rates from API. Trying to load saved rates...\n");
-                    if (loadExchangeRates(&rates) == 0) {
-                        printf("✅ Loaded exchange rates from file.\n");
-                    } else {
-                        printf("❌ No saved exchange rates found. Using default values.\n");
-                        rates.eur_to_usd = 1.08;
-                        rates.eur_to_gbp = 0.85;
-                        rates.usd_to_eur = 0.93;
-                        rates.usd_to_gbp = 0.79;
-                        rates.gbp_to_eur = 1.18;
-                        rates.gbp_to_usd = 1.27;
+            switch (choice) {
+                case 1: {
+                    if (accountCount >= MAX_ACCOUNTS) {
+                        printf("Maximum number of accounts reached.\n");
+                        break;
                     }
-                }
-                displayExchangeRates(rates);
-                break;
-            }
-
-            case 6: {
-                printf("Fetching latest exchange rates from API...\n");
-                if (fetchExchangeRates(&rates, "d5f0a7884008ab629efea30c") == 0)
-                    printf("✅ Exchange rates updated successfully.\n");
-                else
-                    printf("⚠️ Failed to fetch new exchange rates.\n");
-                break;
-            }
-
-            case 7: {
-                int fromCurrency, toCurrency;
-                double amount;
-                printf("Enter the amount to convert: ");
-                if (scanf("%lf", &amount) != 1 || amount <= 0) {
-                    printf("❌ Invalid amount.\n");
-                    while (getchar() != '\n');
+                    Account newAccount;
+                    createAccount(&newAccount);
+                    accounts[accountCount] = newAccount;
+                    accountCount++;
+                    saveAllAccounts(accounts, accountCount);
+                    printf("Account created successfully!\n");
                     break;
                 }
-                printf("From currency (0=USD, 1=EUR, 2=GBP): ");
-                if (scanf("%d", &fromCurrency) != 1 || fromCurrency < 0 || fromCurrency > 2) {
-                    printf("❌ Invalid input.\n");
-                    while (getchar() != '\n');
+                case 2: {
+                    char name[50];
+                    char password[MAX_PASSWORD_LENGTH];
+                    printf("Enter account name: ");
+                    scanf("%49s", name);
+                    printf("Enter password: ");
+                    scanf("%49s", password);
+
+                    int found = 0;
+                    for (int i = 0; i < accountCount; i++) {
+                        if (strcmp(accounts[i].name, name) == 0) {
+                            unsigned long hashedPassword = hashPassword(password, accounts[i].salt);
+                            if (accounts[i].passwordHash == hashedPassword) {
+                                currentAccountIndex = i;
+                                loggedIn = 1;
+                                found = 1;
+                                printf("Login successful!\n");
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        printf("Invalid account name or password.\n");
+                    }
                     break;
                 }
-                printf("To currency (0=USD, 1=EUR, 2=GBP): ");
-                if (scanf("%d", &toCurrency) != 1 || toCurrency < 0 || toCurrency > 2) {
-                    printf("❌ Invalid input.\n");
-                    while (getchar() != '\n');
+                case 3:
+                    printf("Exiting...\n");
+                    break;
+                default:
+                    printf("Invalid choice.\n");
+            }
+        } else {
+            displayAccountMenu(&accounts[currentAccountIndex]);
+            scanf("%d", &choice);
+
+            switch (choice) {
+                case 1:
+                    displayAccountInfo(accounts[currentAccountIndex]);
+                    break;
+                case 2: {
+                    transferMoney(accounts, accountCount, currentAccountIndex);
+                    saveAllAccounts(accounts, accountCount);
                     break;
                 }
-                double convertedAmount = convertCurrency(amount, fromCurrency, toCurrency, rates);
-                printf("💱 Converted amount: %.2f\n", convertedAmount);
-                break;
+                case 3:
+                    if (strcmp(accounts[currentAccountIndex].name, "admin") != 0) {
+                        printf("❌ Only the admin account can add money.\n");
+                        break;
+                    }
+                    int amount;
+                    printf("Enter amount to add: ");
+                    scanf("%d", &amount);
+                    accounts[currentAccountIndex].balance += amount;
+                    printf("✅ Added %d to %s's balance. New balance: %d\n", amount, accounts[currentAccountIndex].name, accounts[currentAccountIndex].balance);
+                    saveAllAccounts(accounts, accountCount);
+                    break;
+                case 4:
+                    loggedIn = 0;
+                    currentAccountIndex = -1;
+                    printf("Logged out successfully.\n");
+                    break;
+                default:
+                    printf("Invalid choice.\n");
             }
-
-            case 8: {
-                printf("💾 Saving and exiting...\n");
-                saveAllAccounts(accounts, count);
-                break;
-            }
-
-            default:
-                printf("❌ Invalid choice. Please try again.\n");
         }
+    } while (choice != 3 || loggedIn);
 
-    } while (choice != 8);
-
+    saveAllAccounts(accounts, accountCount);
     return 0;
 }
