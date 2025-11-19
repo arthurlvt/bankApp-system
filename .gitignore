@@ -5,7 +5,7 @@
 *.dylib
 
 # Executable Files
-bankSystem
+atm
 
 # Temporary and Backup Files
 *.swp
