@@ -28,3 +28,6 @@ build/
 
 # Local Configuration Files
 .env
+
+#ignore test folder
+test/
