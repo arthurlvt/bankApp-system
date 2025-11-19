@@ -4,6 +4,7 @@
 #include "../include/bank.h"
 #include "../include/accounts.h"
 #include "../include/utils.h"
+#include "../include/logs.h"
 
 void displayMainMenu() {
     printf("\n===== Main Menu =====\n");
@@ -12,7 +13,6 @@ void displayMainMenu() {
     printf("3. Exit\n");
     printf("> ");
 }
-
 void displayAccountMenu(const Account *account) {
     printf("\n===== Account Menu for %s =====\n", account->name);
     printf("1. View Account Info\n");
@@ -30,6 +30,9 @@ int main() {
     int loggedIn = 0;
     int currentAccountIndex = -1;
 
+    initLogs();
+    writeLog("ATM started");
+
     do {
         if (!loggedIn) {
             displayMainMenu();
@@ -41,6 +44,7 @@ int main() {
                         printf("Maximum number of accounts reached.\n");
                         break;
                     }
+                    writeLog("User started 'create account' option in main menu");
                     Account newAccount;
                     createAccount(&newAccount);
                     accounts[accountCount] = newAccount;
@@ -57,6 +61,7 @@ int main() {
                     printf("Enter password: ");
                     scanf("%49s", password);
 
+
                     int found = 0;
                     for (int i = 0; i < accountCount; i++) {
                         if (strcmp(accounts[i].name, name) == 0) {
@@ -70,9 +75,11 @@ int main() {
                             }
                         }
                     }
+
                     if (!found) {
                         printf("Invalid account name or password.\n");
                     }
+                    writeLog("User logged in");
                     break;
                 }
                 case 3:
@@ -88,15 +95,18 @@ int main() {
             switch (choice) {
                 case 1:
                     displayAccountInfo(accounts[currentAccountIndex]);
+                    writeLog("User viewed account info");
                     break;
                 case 2: {
                     transferMoney(accounts, accountCount, currentAccountIndex);
                     saveAllAccounts(accounts, accountCount);
+                    writeLog("User transferred money");
                     break;
                 }
                 case 3:
                     if (strcmp(accounts[currentAccountIndex].name, "admin") != 0) {
                         printf("❌ Only the admin account can add money.\n");
+                        writeLog("User attempted to add money without admin privileges");
                         break;
                     }
                     int amount;
@@ -105,11 +115,13 @@ int main() {
                     accounts[currentAccountIndex].balance += amount;
                     printf("✅ Added %d to %s's balance. New balance: %d\n", amount, accounts[currentAccountIndex].name, accounts[currentAccountIndex].balance);
                     saveAllAccounts(accounts, accountCount);
+                    writeLog("Admin added money to account");
                     break;
                 case 4:
                     loggedIn = 0;
                     currentAccountIndex = -1;
                     printf("Logged out successfully.\n");
+                    writeLog("User logged out");
                     break;
                 default:
                     printf("Invalid choice.\n");

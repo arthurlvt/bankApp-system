@@ -141,7 +141,7 @@ void displayExchangeRates(ExchangeRates rates) {
     printf("1 USD = %.4f EUR\n", rates.usd_to_eur);
     printf("1 USD = %.4f GBP\n", rates.usd_to_gbp);
     printf("1 GBP = %.4f EUR\n", rates.gbp_to_eur);
-    printf("1 GBP = %.4f USD\n", rates.gbp_to_usd);
+    printf("1 GBP = a%.4f USD\n", rates.gbp_to_usd);
 }
 
 // Convert currency

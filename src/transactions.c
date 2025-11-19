@@ -4,7 +4,7 @@
 
 void transferMoney(Account accounts[], int count, int currentIndex) {
     BankFeesTransfer fees;
-    loadBankFees("../data/fees_data.json", &fees);
+    loadBankFees("../data/bankFees.json", &fees);
 
     printf("\n=== Transfer Money with Fees ===\n");
 

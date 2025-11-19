@@ -10,7 +10,7 @@ DATA_DIR = data
 # Compilateur et options
 CC = gcc
 CFLAGS = -Wall -Wextra -I$(INC_DIR)
-LIBS = -lcjson
+LIBS = -lcjson -lcurl
 
 # Liste des fichiers sources
 SRC = $(wildcard $(SRC_DIR)/*.c)

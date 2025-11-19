@@ -10,22 +10,43 @@
 #define MAX_RIB_LENGTH 24
 #define MAX_IBAN_LENGTH 35
 #define MAX_BIC_LENGTH 12
-#define EXCHANGE_RATES_FILE  "../data/exchange_rates.txt"
+#define EXCHANGE_RATES_FILE  "data/exchange_rates.json"
 
 
 // Account structure
 typedef enum {
     USD,
     EUR,
-    GBP
+    GBP,
+    AUD,
+    DZD,
 } Currency;
 
 typedef enum {
     UNKNOWN,
     FRENCH,
     AMERICAN,
-    BRITISH
+    BRITISH,
+    GERMAN,
+    ITALIAN,
+    SPANISH,
+    IRISH,
+    AUSTRALIAN,
+    ALGERIAN,
 } Nationality;
+
+typedef enum {
+    MALE,
+    FEMALE,
+    DOG,
+    CAT,
+    NON_BINARY,
+    RATHER_NOT_SAY,
+    MTF,
+    FTM,
+    HELICOPTER,
+    OTHER
+} Gender;
 
 typedef struct {
     char name[50];
@@ -62,14 +83,7 @@ typedef struct {
 typedef struct {
     char name[50];
     BankFeesTransfer fees;
-} Bank;
-
-/*// Bank Fees Transfer Structure (for BankB)
-typedef struct {
-    double fixed_fee;
-    double variable_fee;
-    double exchange_rate_margin;
-} BankBFeesTransfer;*/
+} Bank;FeesRecord;
 
 // Account management
 int  loadAllAccounts(Account accounts[]);
@@ -85,11 +99,7 @@ int   loadExchangeRates(ExchangeRates *rates);
 void  displayExchangeRates(ExchangeRates rates);
 
 // Currency conversion
-double convertCurrency(double amount,
-                       Currency fromCurrency,
-                       Currency toCurrency,
-                       ExchangeRates rates);
-
+double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency, ExchangeRates rates);
 // Bank fees management
 void loadBankFees(const char *filename, BankFeesTransfer *fees);
 
