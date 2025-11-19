@@ -30,7 +30,9 @@ A secure and feature-rich banking system with account management, currency conve
 ## Security issues and ideas
 - (Modifier le fichier pour pas pouvoir mettre d'autre caractères que ceux
   prévus dans les options)
-- (Améliorer le projet encore plus)
+- Ajouter des fonctions pour simuler les frais de change // 1% par frais pour avantager la banque et non l'utilisateur
+- Revoir le système de transfert d'argent
+- Stocker le dernier rapport de change pour avoir un truc cohérent
 
 ---
 

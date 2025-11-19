@@ -5,7 +5,7 @@
 *.dylib
 
 # Executable Files
-bankSystem
+atm
 
 # Temporary and Backup Files
 *.swp
@@ -28,3 +28,6 @@ build/
 
 # Local Configuration Files
 .env
+
+#ignore test folder
+test/

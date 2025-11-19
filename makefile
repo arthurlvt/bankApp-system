@@ -1,26 +1,56 @@
-CC = clang
-CFLAGS = -Wall -I./include -I/usr/local/opt/curl/include
-LDFLAGS = -L/usr/local/opt/curl/lib -lcurl
+# Nom de l'exécutable
+TARGET = atm
 
+# Dossiers
 SRC_DIR = src
-INCLUDE_DIR = include
-BUILD_DIR = build
-TARGET = bankSystem
+INC_DIR = include
+OBJ_DIR = obj
+DATA_DIR = data
 
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+# Compilateur et options
+CC = gcc
+CFLAGS = -Wall -Wextra -I$(INC_DIR)
+LIBS = -lcjson -lcurl
 
-all: $(TARGET)
+# Liste des fichiers sources
+SRC = $(wildcard $(SRC_DIR)/*.c)
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 
-$(TARGET): $(OBJS)
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
+# Règle principale
+all: check_dirs $(TARGET)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(BUILD_DIR)
+# Création de l'exécutable
+$(TARGET): $(OBJ)
+	@echo "🔧 Linking..."
+	$(CC) $(OBJ) -o $(TARGET) $(LIBS)
+	@echo "✅ Build complete! Run with ./$(TARGET)"
+
+# Compilation des fichiers objets
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@echo "🧩 Compiling $< ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Création du dossier obj si nécessaire
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+# Vérification des dossiers
+check_dirs:
+	@if [ ! -d $(SRC_DIR) ]; then \
+		echo "❌ Error: $(SRC_DIR) directory not found!"; \
+		exit 1; \
+	fi
+	@if [ ! -d $(INC_DIR) ]; then \
+		echo "❌ Error: $(INC_DIR) directory not found!"; \
+		exit 1; \
+	fi
+	@if [ ! -d $(DATA_DIR) ]; then \
+		mkdir -p $(DATA_DIR); \
+	fi
+
+# Nettoyage
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
+	@echo "🧹 Cleaning build files..."
+	rm -rf $(OBJ_DIR) $(TARGET)
 
 .PHONY: all clean
