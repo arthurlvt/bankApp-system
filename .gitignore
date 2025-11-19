@@ -13,21 +13,20 @@ atm
 *.bak
 *~
 .DS_Store
-
 # Build Directory
 build/
-
 # Log and Cache Files
 *.log
 *.cache
-
-# IDE Files
+# IDE Files / Files
 .vscode/
 .idea/
 *.iml
-
 # Local Configuration Files
 .env
-
 #ignore test folder
 test/
+# Ignore logs folder
+logs/
+# Ignore accounts data
+data/accounts.dat
