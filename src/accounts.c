@@ -8,21 +8,19 @@
 #define ACCOUNTS_DATA_FILE "data/accounts.dat"
 
 void createAdminAccount(Account accounts[], int *count) {
-    // Vérifier si un compte admin existe déjà
+    // Check if admin account already exists
     for ( int i = 0; i < *count; i++ ) {
         if (strcmp(accounts[i].name, "admin") == 0) {
-            return; // Un compte admin existe déjà
+            return;
         }
     }
-
-    // Créer un compte admin
     Account adminAccount;
     strcpy(adminAccount.name, "admin");
     adminAccount.age = 30;
     adminAccount.gender = 0;
     adminAccount.nationality = UNKNOWN;
     adminAccount.currency = USD;
-    adminAccount.balance = 10000; // Solde initial pour l'admin
+    adminAccount.balance = 10000;
     adminAccount.salt = (unsigned long)time(NULL);
     adminAccount.passwordHash = hashPassword("admin", adminAccount.salt);
     strcpy(adminAccount.rib, "");
@@ -83,6 +81,12 @@ void saveAllAccounts(Account accounts[], int count) {
     fclose(file);
 }
 
+void generateFrenchRIB(char *rib) {
+    // Simple RIB generation: 23 digits
+    snprintf(rib, MAX_RIB_LENGTH, "30004%05d%011d%02d",
+             rand() % 100000, rand() % 100000000000, rand() % 100);
+}
+
 void generateIBAN(char *iban, const char *rib, Nationality nationality) {
     if (nationality == FRENCH && strlen(rib) > 0) {
         const char *countryCode = "FR";
@@ -103,7 +107,7 @@ void generateIBAN(char *iban, const char *rib, Nationality nationality) {
     } else if (nationality == AUSTRALIAN) {
         snprintf(iban, MAX_IBAN_LENGTH, "AU690070001234567890123456");
     } else if (nationality == ALGERIAN) {
-        snprintf(iban, MAX_IBAN_LENGTH, "DZ4000400040000001234567");
+        snprintf(iban, MAX_IBAN_LENGTH, "DZ400040004000001234567");
     } else {
         snprintf(iban, MAX_IBAN_LENGTH, "UNKNOWN00000000000000000000");
     }
@@ -129,17 +133,6 @@ void generateBIC(char *bic, Nationality nationality) {
         snprintf(bic, MAX_BIC_LENGTH, "BNADDZAL");
     } else {
         snprintf(bic, MAX_BIC_LENGTH, "UNKNOWNXX");
-    }
-}
-
-
-void generateBIC(char *bic, Nationality nationality) {
-    if (nationality == FRENCH) {
-        snprintf(bic, MAX_BIC_LENGTH, "SOGEFRPP");
-    } else if (nationality == AMERICAN) {
-        snprintf(bic, MAX_BIC_LENGTH, "BOFAUS3N");
-    } else if (nationality == BRITISH) {
-        snprintf(bic, MAX_BIC_LENGTH, "NWBKGB2L");
     }
 }
 
@@ -178,10 +171,10 @@ void createAccount(Account *account) {
             account->currency = GBP;
             break;
         case ALGERIAN:
-            account->currency = EUR; // ou une autre devise appropriée
+            account->currency = DZD; 
             break;
         default:
-            account->currency = USD; // Default currency
+            account->currency = USD;
     }
 
     printf("Enter password: ");

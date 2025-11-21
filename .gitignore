@@ -6,6 +6,7 @@
 
 # Executable Files
 atm
+makefile
 
 # Temporary and Backup Files
 *.swp

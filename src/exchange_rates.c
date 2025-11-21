@@ -45,6 +45,7 @@ void saveExchangeRates(ExchangeRates rates) {
 
     fclose(file);
     printf("Exchange rates saved to file.\n");
+    writelog("Exchange rates saved to file.");
 }
 
 // Chargement des taux de change depuis le fichier
@@ -78,6 +79,7 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
 
     if (!curl) {
         printf("Failed to initialize curl.\n");
+        writelog("Failed to initialize curl.");
         free(chunk.memory);
         curl_global_cleanup();
         return -1;
@@ -121,6 +123,7 @@ int fetchExchangeRates(ExchangeRates *rates, const char *api_key) {
         printf("Exchange rates fetched and saved.\n");
     } else {
         printf("Failed to parse exchange rates.\n");
+        writelog("Failed to parse exchange rates.");
         free(chunk.memory);
         curl_easy_cleanup(curl);
         curl_global_cleanup();

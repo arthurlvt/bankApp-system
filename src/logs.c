@@ -13,13 +13,13 @@ void initLogs() {
     }
 }
 
-void writeLog(const char *format, ...) {
+void writeLog(const char *format, ...) { // ... for variadic function
     FILE *f = fopen(LOG_FILE, "a");
     if (!f) return;
 
     time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-
+    struct tm *t = localtime(&now); // Fixed: use localtime instead of localtime_r for C17 compliance
+    fprintf(f, "<------------------------------------ ATM ------------------------------------>\n");
     fprintf(f, "[%02d-%02d-%04d %02d:%02d:%02d] ",
         t->tm_mday, t->tm_mon + 1, t->tm_year + 1900,
         t->tm_hour, t->tm_min, t->tm_sec
