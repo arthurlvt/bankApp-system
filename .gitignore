@@ -17,7 +17,6 @@ makefile
 # Build Directory
 build/
 # Log and Cache Files
-*.log
 *.cache
 # IDE Files / Files
 .vscode/
